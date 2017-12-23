@@ -46,7 +46,11 @@ public class AnsibleController {
         }
     }
 
-
+    /**
+     * 安装mysql 并返回账号密码
+     * @param Ip
+     * @return
+     */
     @RequestMapping(value = "/installmysql", method = RequestMethod.POST)
     public ResultVO installmysql(@RequestParam("ip") String Ip) {
         try {
@@ -65,7 +69,7 @@ public class AnsibleController {
             log.info("-----------------------installmysql finished------------------------");
             br2.close();
 
-            String[] cmd1 = new String[5];
+            String[] cmd1 = new String[3];
             cmd1[0] = "/bin/sh";
             cmd1[1] = "-c";
             StringBuffer buf=new StringBuffer();
@@ -89,10 +93,8 @@ public class AnsibleController {
             userinfo.setUsername(usrroot);
             userinfo.setPassword(tempass);
             log.info(result3);
-            log.info("getpass finished----------------------------");
-            buf.close();
+            log.info("--------------------getpass finished--------------------------");
             br3.close();
-
             return ResultVOUtil.success(userinfo);
         } catch (Exception e) {
             e.printStackTrace();
