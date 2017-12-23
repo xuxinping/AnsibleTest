@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Vector;
 
 /**
  * Created by Zhang Yu on 2017/12/21.
@@ -19,8 +20,36 @@ import java.io.InputStreamReader;
 @Slf4j
 public class AnsibleController {
 
+    @RequestMapping(value = "/gethostlist", method = RequestMethod.GET)
+    public ResultVO getHostList() {
+        try {
+            String pushssh = "cat /etc/ansible/hosts";
+            Process ps = Runtime.getRuntime().exec(pushssh);
+            ps.waitFor();
+            BufferedReader br = new BufferedReader(new InputStreamReader(ps.getInputStream()));
+            Vector vec = new Vector();
+            String line;
+            int a = 0;
+            while ((line = br.readLine()) != null) {
+                /* 排除第一行 */
+                if (a != 0) {
+                    String[] temp = line.split(" ");
+                    vec.addElement(temp[0]);
+                }
+                a++;
+            }
+            System.out.println(vec);
+            br.close();
+            return ResultVOUtil.success(vec);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultVOUtil.error(500, "出错啦！");
+        }
+    }
+
     /**
      * 推送公钥
+     *
      * @return
      */
     @RequestMapping(value = "/pushrsa", method = RequestMethod.GET)
@@ -48,6 +77,7 @@ public class AnsibleController {
 
     /**
      * 安装mysql 并返回账号密码
+     *
      * @param Ip
      * @return
      */
@@ -72,7 +102,7 @@ public class AnsibleController {
             String[] cmd1 = new String[3];
             cmd1[0] = "/bin/sh";
             cmd1[1] = "-c";
-            StringBuffer buf=new StringBuffer();
+            StringBuffer buf = new StringBuffer();
             buf.append("ansible ");
             buf.append(Ip);
             buf.append(" -a \"grep 'temporary password' /var/log/mysqld.log\"");
