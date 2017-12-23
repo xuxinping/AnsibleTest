@@ -1,0 +1,4 @@
+logging:
+  pattern:
+    console: "%d - %msg%n"
+  path: /develop/apache-tomcat-8.5.24/logs
