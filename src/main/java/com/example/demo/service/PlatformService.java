@@ -14,8 +14,4 @@ public interface PlatformService {
 
     ResultVO pushRsa();
 
-    void removeHost(String ip);
-
-    String genRandomPassword(int len);
-
 }

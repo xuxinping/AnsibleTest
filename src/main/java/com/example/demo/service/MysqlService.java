@@ -8,4 +8,6 @@ import com.example.demo.VO.ResultVO;
 public interface MysqlService {
 
     ResultVO installMysql(String Ip);
+
+    ResultVO installMysqlMasterAndSlave(String Ip1, String Ip2);
 }
