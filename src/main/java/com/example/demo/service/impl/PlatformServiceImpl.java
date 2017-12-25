@@ -48,7 +48,7 @@ public class PlatformServiceImpl implements PlatformService {
     @Override
     public ResultVO pushRsa() {
         try {
-            String pushssh = "ansible-playbook /develop/pushssh.ymal";
+            String pushssh = "ansible-playbook /develop/pushssh.yml";
             Process ps1 = Runtime.getRuntime().exec(pushssh);
             ps1.waitFor();
             BufferedReader br1 = new BufferedReader(new InputStreamReader(ps1.getInputStream()));

@@ -25,7 +25,7 @@ public class MysqlServiceImpl implements MysqlService {
     @Override
     public ResultVO installMysql(String Ip) {
         try {
-            String installmysql1 = "ansible-playbook /develop/installmysql.ymal -l ";
+            String installmysql1 = "ansible-playbook /develop/installmysql.yml -l ";
             String installmysql = installmysql1.concat(Ip);
             Process ps2 = Runtime.getRuntime().exec(installmysql);
             ps2.waitFor();
@@ -68,7 +68,7 @@ public class MysqlServiceImpl implements MysqlService {
                 cmd2[0] = "/bin/sh";
                 cmd2[1] = "-c";
                 StringBuffer buf1 = new StringBuffer();
-                buf1.append("ansible-playbook /develop/createuser.ymal -l ");
+                buf1.append("ansible-playbook /develop/createuser.yml -l ");
                 buf1.append(Ip);
                 buf1.append(" -e \"password=");
                 buf1.append(tempass);
