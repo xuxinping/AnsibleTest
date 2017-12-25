@@ -16,4 +16,6 @@ public interface PlatformService {
 
     void removeHost(String ip);
 
+    String genRandomPassword(int len);
+
 }

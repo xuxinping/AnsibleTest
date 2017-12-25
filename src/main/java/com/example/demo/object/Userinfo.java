@@ -11,4 +11,8 @@ public class Userinfo {
     private String username;
 
     private String password;
+
+    private String newusername;
+
+    private String newpassword;
 }
