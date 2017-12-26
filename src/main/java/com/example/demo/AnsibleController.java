@@ -81,4 +81,24 @@ public class AnsibleController {
             return ResultVOUtil.error(500, "出错啦！");
         }
     }
+
+    /**
+     * 安装mysql 并返回账号密码
+     *
+     * @param Ip1 Ip2
+     * @return
+     */
+    @RequestMapping(value = "/install_mysql_masterandslave", method = RequestMethod.POST)
+    public ResultVO installMysql(@RequestParam("ip1") String Ip1, @RequestParam("ip2") String Ip2) {
+        try {
+            List<String> hostList = platformService.getHostList();
+            if (hostList.contains(Ip1) && hostList.contains(Ip2)) {
+                return mysqlService.installMysqlMasterAndSlave(Ip1, Ip2);
+            }
+            else return ResultVOUtil.error(500, "IP不在列表中");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultVOUtil.error(500, "出错啦！");
+        }
+    }
 }

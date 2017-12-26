@@ -52,15 +52,15 @@ public class CommonUtils {
 
     public static void recordLog(Process ps) {
         try {
-            BufferedReader br2 = new BufferedReader(new InputStreamReader(ps.getInputStream()));
-            StringBuffer sb2 = new StringBuffer();
-            String line2;
-            while ((line2 = br2.readLine()) != null) {
-                sb2.append(line2).append("\n");
+            BufferedReader brr = new BufferedReader(new InputStreamReader(ps.getInputStream()));
+            StringBuffer sbr = new StringBuffer();
+            String liner;
+            while ((liner = brr.readLine()) != null) {
+                sbr.append(liner).append("\n");
             }
-            br2.close();
-            String result2 = sb2.toString();
-            log.info(result2);
+            brr.close();
+            String resultr = sbr.toString();
+            log.info(resultr);
         } catch (Exception e) {
             e.printStackTrace();
         }
