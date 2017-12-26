@@ -18,9 +18,15 @@ import java.io.InputStreamReader;
 @Slf4j
 public class MysqlServiceImpl implements MysqlService {
 
+    /**
+     * mysql单例安装
+     * @param Ip
+     * @return
+     */
     @Override
     public ResultVO installMysql(String Ip) {
         try {
+            //执行类似：ansible-playbook /develop/installmysql.yml -l 192.168.91.131
             String installmysql1 = "ansible-playbook /develop/installmysql.yml -l ";
             String installmysql = installmysql1.concat(Ip);
             Process ps2 = Runtime.getRuntime().exec(installmysql);
@@ -29,6 +35,7 @@ public class MysqlServiceImpl implements MysqlService {
             CommonUtils.recordLog(ps2);
             log.info("-----------------------installmysql finished------------------------");
 
+            //调用的shell命令中若包含单双引号，则必须使用/bin/sh -c,原因还未知。。。
             String[] cmd1 = new String[3];
             cmd1[0] = "/bin/sh";
             cmd1[1] = "-c";
@@ -47,14 +54,18 @@ public class MysqlServiceImpl implements MysqlService {
                 sb3.append(line3).append("\n");
             }
             String result3 = sb3.toString();
+            //截取结果的相应位置字符串，若执行正确，则返回root与root密码
             String usrroot = result3.substring(result3.length() - 29, result3.length() - 25);
             String tempass = result3.substring(result3.length() - 13, result3.length() - 1);
             br3.close();
+            //判断是否执行正确
             if (usrroot.equals("root")) {
                 log.info(result3);
                 log.info("--------------------getpass finished--------------------------");
                 String newpassword = CommonUtils.genRandomPassword(15);
                 String[] cmd2 = new String[3];
+                //执行类似：ansible-playbook /develop/createmaster.yml -l 192.168.91.131 -e
+                // "password=上面所得密码 newpassword=随机生成的新密码"
                 cmd2[0] = "/bin/sh";
                 cmd2[1] = "-c";
                 StringBuffer buf1 = new StringBuffer();
@@ -70,6 +81,7 @@ public class MysqlServiceImpl implements MysqlService {
                 ps4.waitFor();
                 log.info(cmd2[2]);
                 log.info(newpassword);
+                //输出相应结果
                 Userinfo userinfo = new Userinfo();
                 userinfo.setUsername("root");
                 userinfo.setPassword("MCloud2017@");
@@ -84,10 +96,17 @@ public class MysqlServiceImpl implements MysqlService {
         }
     }
 
+    /**
+     * 安装mysql的主从结构
+     * @param Ip1
+     * @param Ip2
+     * @return
+     */
     @Override
     public ResultVO installMysqlMasterAndSlave(String Ip1, String Ip2) {
         try {
             //执行ansible-playbook /develop/installmysql.yml -l 192.168.91.131,192.168.91.132
+            //为主从节点安装mysql
             StringBuffer buf = new StringBuffer();
             buf.append("ansible-playbook /develop/installmysql.yml -l ");
             buf.append(Ip1);
@@ -154,6 +173,7 @@ public class MysqlServiceImpl implements MysqlService {
 
                 //执行ansible-playbook /develop/createmaster.yml -l 192.168.91.131 -e
                 // "password=q*3e=j&o=plH newpassword=MCloud2017@"
+                //配置主节点
                 String newpasswordmaster = CommonUtils.genRandomPassword(15);
                 String[] cmd3 = new String[3];
                 cmd3[0] = "/bin/sh";
@@ -174,6 +194,7 @@ public class MysqlServiceImpl implements MysqlService {
                 log.info("--------------------createmaster finished--------------------------");
 
                 //执行ansible 192.168.91.131 -a "mysql -uroot -pMCloud2017@ -e 'SHOW MASTER STATUS'"
+                //收集主节点相应信息 file 与 position 信息
                 String[] cmd4 = new String[3];
                 cmd4[0] = "/bin/sh";
                 cmd4[1] = "-c";
@@ -202,6 +223,9 @@ public class MysqlServiceImpl implements MysqlService {
                 br4.close();
                 log.info("--------------------get file and position finished--------------------------");
 
+                //执行类似：ansible-playbook /develop/createslave.yml -l 192.168.91.132 -e "password=gqGSekYOh1/i
+                // newpassword=MCloud2017@ mysql_repl_master='192.168.91.131' File='mysql-bin.000001' Position=1067"
+                //为从节点配置信息
                 String newpasswordslave = CommonUtils.genRandomPassword(15);
                 String[] cmd5 = new String[3];
                 cmd5[0] = "/bin/sh";
@@ -228,6 +252,7 @@ public class MysqlServiceImpl implements MysqlService {
                 CommonUtils.recordLog(ps5);
                 log.info("--------------------createslave finished--------------------------");
 
+                //结果返回
                 Userinfo userinfo = new Userinfo();
                 userinfo.setUsername("chinaunicom");
                 userinfo.setPassword(newpasswordmaster);

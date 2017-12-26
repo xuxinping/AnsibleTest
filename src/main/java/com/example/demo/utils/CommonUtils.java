@@ -11,6 +11,11 @@ import java.util.Random;
  */
 @Slf4j
 public class CommonUtils {
+
+    /**
+     * 从/etc/ansible/hosts把已用的IP删除
+     * @param ip
+     */
     public static void removeHost(String ip) {
         try {
             String[] cmd1 = new String[3];
@@ -28,6 +33,11 @@ public class CommonUtils {
         }
     }
 
+    /**
+     * 生成随机字符串，作为密码
+     * @param len
+     * @return
+     */
     public static String genRandomPassword(int len) {
         Random rd = new Random();
         final int maxNum = 62;
@@ -50,6 +60,10 @@ public class CommonUtils {
         return sb.toString();
     }
 
+    /**
+     * 返回当前线程的输出内容到log
+     * @param ps
+     */
     public static void recordLog(Process ps) {
         try {
             BufferedReader brr = new BufferedReader(new InputStreamReader(ps.getInputStream()));

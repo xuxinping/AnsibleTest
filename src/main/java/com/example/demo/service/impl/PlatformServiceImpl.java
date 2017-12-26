@@ -17,6 +17,11 @@ import java.util.List;
 @Service
 @Slf4j
 public class PlatformServiceImpl implements PlatformService {
+    /**
+     * 从/etc/ansible/hosts文件中读取所有配置在ansible中的ip地址
+     * @return
+     * @throws Exception
+     */
     @Override
     public List<String> getHostList() throws Exception {
         try {
@@ -44,6 +49,10 @@ public class PlatformServiceImpl implements PlatformService {
         }
     }
 
+    /**
+     * 为所有hosts推送公钥
+     * @return
+     */
     @Override
     public ResultVO pushRsa() {
         try {
