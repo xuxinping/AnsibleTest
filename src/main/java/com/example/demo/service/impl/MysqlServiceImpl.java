@@ -169,6 +169,8 @@ public class MysqlServiceImpl implements MysqlService {
                 cmd3[2] = buf3.toString();
                 Process ps3 = Runtime.getRuntime().exec(cmd3);
                 ps3.waitFor();
+                //日志记录
+                CommonUtils.recordLog(ps3);
                 log.info("--------------------createmaster finished--------------------------");
 
                 //执行ansible 192.168.91.131 -a "mysql -uroot -pMCloud2017@ -e 'SHOW MASTER STATUS'"
@@ -222,6 +224,8 @@ public class MysqlServiceImpl implements MysqlService {
                 log.info(cmd5[2]);
                 Process ps5 = Runtime.getRuntime().exec(cmd5);
                 ps5.waitFor();
+                //日志记录
+                CommonUtils.recordLog(ps5);
                 log.info("--------------------createslave finished--------------------------");
 
                 Userinfo userinfo = new Userinfo();
