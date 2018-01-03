@@ -3,6 +3,7 @@ package com.example.demo;
 import com.example.demo.VO.ResultVO;
 import com.example.demo.service.MysqlService;
 import com.example.demo.service.PlatformService;
+import com.example.demo.service.RedisService;
 import com.example.demo.utils.ResultVOUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class AnsibleController {
 
     @Autowired
     private MysqlService mysqlService;
+
+    @Autowired
+    private RedisService redisService;
 
     /**
      * 得到主机列表
@@ -74,8 +78,7 @@ public class AnsibleController {
             List<String> hostList = platformService.getHostList();
             if (hostList.contains(Ip)) {
                 return mysqlService.installMysql(Ip);
-            }
-            else return ResultVOUtil.error(500, "IP不在列表中");
+            } else return ResultVOUtil.error(500, "IP不在列表中");
         } catch (Exception e) {
             e.printStackTrace();
             return ResultVOUtil.error(500, "出错啦！");
@@ -83,7 +86,7 @@ public class AnsibleController {
     }
 
     /**
-     * 安装mysql 并返回账号密码
+     * 安装主从mysql 并返回账号密码
      *
      * @param Ip1 Ip2
      * @return
@@ -94,8 +97,27 @@ public class AnsibleController {
             List<String> hostList = platformService.getHostList();
             if (hostList.contains(Ip1) && hostList.contains(Ip2)) {
                 return mysqlService.installMysqlMasterAndSlave(Ip1, Ip2);
-            }
-            else return ResultVOUtil.error(500, "IP不在列表中");
+            } else return ResultVOUtil.error(500, "IP不在列表中");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultVOUtil.error(500, "出错啦！");
+        }
+    }
+
+
+    /**
+     * 安装redis
+     *
+     * @param Ip
+     * @return
+     */
+    @RequestMapping(value = "/install_redis", method = RequestMethod.POST)
+    public ResultVO installRedis(@RequestParam("ip") String Ip) {
+        try {
+            List<String> hostList = platformService.getHostList();
+            if (hostList.contains(Ip)) {
+                return redisService.installRedis(Ip);
+            } else return ResultVOUtil.error(500, "IP不在列表中");
         } catch (Exception e) {
             e.printStackTrace();
             return ResultVOUtil.error(500, "出错啦！");

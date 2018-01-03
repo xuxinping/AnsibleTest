@@ -87,7 +87,7 @@ public class MysqlServiceImpl implements MysqlService {
                 userinfo.setPassword("MCloud2017@");
                 userinfo.setNewusername("chinaunicom");
                 userinfo.setNewpassword(newpassword);
-                CommonUtils.removeHost(Ip);
+//                CommonUtils.removeHost(Ip);
                 return ResultVOUtil.success(userinfo);
             } else return ResultVOUtil.error(500, "出错啦！");
         } catch (Exception e) {
